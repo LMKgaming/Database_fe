@@ -7,7 +7,7 @@ export default function UserManagement() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
-  
+  const [searchQuery, setSearchQuery] = useState("");
   // State quản lý chế độ Sửa hay Thêm
   const [isEditing, setIsEditing] = useState(false);
 
@@ -125,6 +125,17 @@ export default function UserManagement() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Tìm kiếm người dùng
+  const searchUsers = async (query) => {
+    try {
+      const res = await fetch(`${API_URL}/search?query=${encodeURIComponent(query)}`);
+      const data = await res.json();
+      setUsers(data);      
+    } catch (err) {
+      console.error("Lỗi tìm kiếm:", err);
+    }
+  }
+
   const resetForm = () => {
     setFormData(initialFormState);
     setIsEditing(false);
@@ -229,6 +240,10 @@ export default function UserManagement() {
 
       {/* --- DANH SÁCH NGƯỜI DÙNG --- */}
       <div className={styles.tableContainer}>
+        <div className={styles.tableSearch}>
+          <input type="text" placeholder="Tìm kiếm người dùng..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+          <button className={styles.searchIcon} onClick={() => searchUsers(searchQuery)}>🔍</button>
+        </div>
         <table className={styles.table}>
           <thead>
             <tr>
