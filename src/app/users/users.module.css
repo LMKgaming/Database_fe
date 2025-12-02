@@ -47,12 +47,7 @@
   margin-bottom: 2rem;
   border: 1px solid rgba(255,255,255,0.06);
   color: #ffffff;
-}
-/* keep form at a fixed max width so table below cannot change its size */
-.formCard {
-  width: 100%;
-  max-width: 1200px;
-  box-sizing: border-box;
+  width: 879.42px;
 }
 
 .formGrid {
@@ -241,7 +236,7 @@
   width: 100%;
   max-width: 420px;
   padding: 0.6rem 0.9rem;
-  padding-left: 2.5rem;
+  padding-left: 1.2rem;
   border-radius: 999px;
   border: 1px solid rgba(255,255,255,0.06);
   background: rgba(255,255,255,0.03);
