@@ -3,23 +3,49 @@
   margin: 0 auto;
   padding: 2rem;
   font-family: var(--font-geist-sans), sans-serif;
-  color: #333;
+  color: #eef6ff;
+  /* keep container background transparent so the page background shows through */
+  background-color: transparent;
+}
+
+/* Page background using public/background.jpeg */
+.background {
+  min-height: 100vh;
+  background-image: url('/background1.jpg');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: flex-start;
+  /* subtle dark overlay so content is readable */
+  position: relative;
+}
+
+.background::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  pointer-events: none;
 }
 
 .title {
   text-align: center;
   margin-bottom: 2rem;
-  color: #0070f3;
+  color: #e6f0ff;
 }
 
 /* Form Styles */
 .formCard {
-  background: #fff;
+  background: rgba(8, 12, 20, 0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(2,8,23,0.6);
   margin-bottom: 2rem;
-  border: 1px solid #eaeaea;
+  border: 1px solid rgba(255,255,255,0.06);
+  color: #eef6ff;
 }
 
 .formGrid {
@@ -41,14 +67,17 @@
 
 .input, .select {
   padding: 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
   font-size: 1rem;
+  background: rgba(255,255,255,0.03);
+  color: #eef6ff;
 }
 
 .input:focus {
-  outline: 2px solid #0070f3;
-  border-color: transparent;
+  outline: 2px solid rgba(96, 165, 250, 0.35);
+  border-color: rgba(96, 165, 250, 0.6);
+  box-shadow: 0 4px 18px rgba(96,165,250,0.08);
 }
 
 .buttonGroup {
@@ -60,28 +89,27 @@
 .btn {
   padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
-  transition: background 0.2s;
+  transition: background 0.2s, transform 0.08s;
 }
 
 .btnPrimary {
-  background-color: #0070f3;
-  color: white;
+  background: linear-gradient(90deg,#2563eb 0%, #1e40af 100%);
+  color: #fff;
 }
 
-.btnPrimary:hover {
-  background-color: #0051a2;
-}
+.btnPrimary:hover { transform: translateY(-1px); }
 
 .btnSecondary {
-  background-color: #666;
-  color: white;
+  background-color: rgba(255,255,255,0.06);
+  color: #eef6ff;
+  border: 1px solid rgba(255,255,255,0.04);
 }
 
 .btnDanger {
-  background-color: #e00;
+  background-color: #ff4d4f;
   color: white;
 }
 
@@ -89,23 +117,24 @@
 .tableContainer {
   overflow-x: auto;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 30px rgba(2,8,23,0.45);
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
+  background: rgba(8,12,20,0.45);
+  color: #eef6ff;
 }
 
 .table th, .table td {
   padding: 1rem;
   text-align: left;
-  border-bottom: 1px solid #eaeaea;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
 }
 
 .table th {
-  background-color: #f7f7f7;
+  background-color: rgba(255,255,255,0.03);
   font-weight: 700;
 }
 
@@ -123,30 +152,30 @@
   cursor: pointer;
 }
 
-.btnDelete {
-  background-color: #ff4d4f;
-  color: white;
+.btnEdit {
+  background-color: #f59e0b;
+  color: #081225;
   border: none;
   padding: 0.5rem 1rem;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
 }
-
-.message {
-  padding: 1rem;
-  margin-bottom: 1rem;
-  border-radius: 4px;
-  font-weight: 500;
+.btnDelete {
+  background-color: #ef4444;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
 }
-
 .success {
-  background-color: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
+  background-color: rgba(34,197,94,0.12);
+  color: #d1fae5;
+  border: 1px solid rgba(34,197,94,0.18);
 }
 
 .error {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
+  background-color: rgba(239,68,68,0.12);
+  color: #ffd6d6;
+  border: 1px solid rgba(239,68,68,0.18);
 }

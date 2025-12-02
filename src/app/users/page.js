@@ -132,8 +132,9 @@ export default function UserManagement() {
   };
 
   return (
+    <div className={styles.background}>
     <div className={styles.container}>
-      <h1 className={styles.title}>Quản Lý Người Dùng (Stored Procedures)</h1>
+      <h1 className={styles.title}>Quản Lý Người Dùng </h1>
 
       {/* Thông báo lỗi/thành công */}
       {message.text && (
@@ -271,6 +272,7 @@ export default function UserManagement() {
           </tbody>
         </table>
       </div>
+    </div>
     </div>
   );
 }
