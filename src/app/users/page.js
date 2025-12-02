@@ -1,13 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
 import styles from "./users.module.css";
-
+import Image from 'next/image';
 export default function UserManagement() {
   const API_URL = "http://localhost:8080/api/users"; // Địa chỉ Backend
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
-  
+  const [searchQuery, setSearchQuery] = useState("");
   // State quản lý chế độ Sửa hay Thêm
   const [isEditing, setIsEditing] = useState(false);
 
@@ -33,6 +33,7 @@ export default function UserManagement() {
       setUsers(data);
     } catch (err) {
       console.error("Lỗi kết nối:", err);
+      setMessage({ type: "error", text: `Lỗi kết nối: ${err.message || err}` });
     }
     setLoading(false);
   };
@@ -125,6 +126,22 @@ export default function UserManagement() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Tìm kiếm người dùng
+  const searchUsers = async (query) => {
+    try {
+      const res = await fetch(`${API_URL}/search?query=${encodeURIComponent(query)}`);
+      const data = await res.json();
+      setUsers(data);      
+    } catch (err) {
+      console.error("Lỗi tìm kiếm:", err);
+      setMessage({ type: "error", text: `Lỗi tìm kiếm: ${err.message || err}` });
+    }
+  }
+
+  const closeModal = () => {
+    setMessage({ type: "", text: "" });
+  }
+
   const resetForm = () => {
     setFormData(initialFormState);
     setIsEditing(false);
@@ -136,16 +153,32 @@ export default function UserManagement() {
     <div className={styles.container}>
       <h1 className={styles.title}>Quản Lý Người Dùng </h1>
 
-      {/* Thông báo lỗi/thành công */}
-      {message.text && (
+      {/* Thông báo thành công (inline). Lỗi hiển thị dưới dạng popup modal */}
+      {message.text && message.type === 'success' && (
         <div className={`${styles.message} ${styles[message.type]}`}>
           {message.text}
         </div>
       )}
 
+      {/* Error modal popup */}
+      {message.type === 'error' && (
+        <div className={styles.modalOverlay} onClick={closeModal}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h3>Lỗi</h3>
+              <button className={styles.modalClose} onClick={closeModal}>×</button>
+            </div>
+            <div className={styles.modalBody}>{message.text}</div>
+            <div style={{display: 'flex', justifyContent: 'flex-end', marginTop: '1rem'}}>
+              <button className={`${styles.btn} ${styles.btnSecondary}`} onClick={closeModal}>Đóng</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* --- FORM NHẬP LIỆU --- */}
       <div className={styles.formCard}>
-        <h3>{isEditing ? `Cập nhật thông tin: ${formData.UserID}` : "Thêm Người Dùng Mới"}</h3>
+        <h3 >{isEditing ? `Cập nhật thông tin: ${formData.UserID}` : "Thêm Người Dùng Mới"}</h3>
         <form onSubmit={handleSubmit}>
           <div className={styles.formGrid}>
             
@@ -209,7 +242,6 @@ export default function UserManagement() {
                 name="Password" 
                 value={formData.Password} 
                 onChange={handleChange} 
-                placeholder="Có Hoa, Số, Ký tự đặc biệt..."
                 required 
               />
             </div>
@@ -217,10 +249,10 @@ export default function UserManagement() {
 
           <div className={styles.buttonGroup}>
             <button type="submit" className={`${styles.btn} ${styles.btnPrimary}`}>
-              {isEditing ? "Lưu Thay Đổi (sp_UpdateUser)" : "Thêm Mới (sp_InsertUser)"}
+              {isEditing ? "Lưu Thay Đổi" : "Thêm Mới"}
             </button>
             {isEditing && (
-              <button type="button" onClick={resetForm} className={`${styles.btn} ${styles.btnSecondary}`}>
+              <button type="button" className={styles.btnClose} onClick={resetForm}>
                 Hủy Bỏ
               </button>
             )}
@@ -228,6 +260,12 @@ export default function UserManagement() {
         </form>
       </div>
 
+        <div className={styles.tableSearch}>
+          <input type="text" placeholder="Tìm kiếm người dùng..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+          <button className={styles.searchIcon} onClick={() => searchUsers(searchQuery)}>
+            <Image src="/search.png" alt="Search" width={20} height={20} />
+          </button>
+        </div>
       {/* --- DANH SÁCH NGƯỜI DÙNG --- */}
       <div className={styles.tableContainer}>
         <table className={styles.table}>
@@ -257,13 +295,13 @@ export default function UserManagement() {
                       className={styles.btnEdit}
                       onClick={() => handleEditClick(user)}
                     >
-                      Sửa
+                      <Image className={styles.btnEditImg} src="/modify.png" alt="Edit" width={20} height={20} />
                     </button>
                     <button 
                       className={styles.btnDelete}
                       onClick={() => handleDelete(user.UserID)}
                     >
-                      Xóa
+                      <Image className={styles.btnDeleteImg} src="/delete.png" alt="Delete" width={20} height={20} />
                     </button>
                   </div>
                 </td>
