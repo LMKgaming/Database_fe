@@ -21,9 +21,6 @@ export default function HomePage() {
         setIsLoadingMovies(true);
         setMoviesError(null);
 
-        // TODO: THAY URL NÀY BẰNG API THẬT CỦA BẠN
-        // Backend nên trả dạng:
-        // [{ id: "MV001", title: "Mai", totalRevenue: 1068000 }, ...]
         const res = await fetch("http://localhost:8080/api/movies");
         if (!res.ok) {
           throw new Error("Không thể tải danh sách phim");
@@ -79,85 +76,87 @@ export default function HomePage() {
   };
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.pageTitle}>Thống kê doanh thu phim</h1>
+    <div className={styles.background}>
+      <div className={styles.container}>
+        <h1 className={styles.pageTitle}>Thống kê doanh thu phim</h1>
 
-      {/* Doanh thu tổng tất cả phim */}
-      <div className={styles.totalAllWrapper}>
-        <span className={styles.totalAllLabel}>Tổng doanh thu tất cả phim:</span>
-        <span className={styles.totalAllValue}>{formatCurrency(totalAllMovies)}</span>
-      </div>
+        {/* Doanh thu tổng tất cả phim */}
+        <div className={styles.totalAllWrapper}>
+          <span className={styles.totalAllLabel}>Tổng doanh thu tất cả phim:</span>
+          <span className={styles.totalAllValue}>{formatCurrency(totalAllMovies)}</span>
+        </div>
 
-      {/* Khu vực bảng phim */}
-      <div className={styles.tableSection}>
-        <h2 className={styles.sectionTitle}>Danh sách phim</h2>
+        {/* Khu vực bảng phim */}
+        <div className={styles.tableSection}>
+          <h2 className={styles.sectionTitle}>Danh sách phim</h2>
 
-        {isLoadingMovies && <p>Đang tải danh sách phim...</p>}
-        {moviesError && <p className={styles.errorText}>{moviesError}</p>}
+          {isLoadingMovies && <p>Đang tải danh sách phim...</p>}
+          {moviesError && <p className={styles.errorText}>{moviesError}</p>}
 
-        {!isLoadingMovies && !moviesError && (
-          <div className={styles.tableWrapper}>
-            <table className={styles.movieTable}>
-              <thead>
-                <tr>
-                  <th style={{ width: "120px" }}>Mã phim</th>
-                  <th>Tên phim</th>
-                  <th style={{ width: "220px" }}>Tổng doanh thu</th>
-                </tr>
-              </thead>
-              <tbody>
-                {movies.map((movie) => (
-                  <tr key={movie.id}>
-                    <td>{movie.id}</td>
-                    <td>
-                      <button
-                        type="button"
-                        className={styles.movieTitleButton}
-                        onClick={() => handleMovieClick(movie)}
-                      >
-                        {movie.title}
-                      </button>
-                    </td>
-                    <td className={styles.revenueCell}>
-                      {formatCurrency(movie.totalRevenue)}
-                    </td>
-                  </tr>
-                ))}
-                {movies.length === 0 && (
+          {!isLoadingMovies && !moviesError && (
+            <div className={styles.tableWrapper}>
+              <table className={styles.movieTable}>
+                <thead>
                   <tr>
-                    <td colSpan={3} style={{ textAlign: "center" }}>
-                      Không có dữ liệu phim.
-                    </td>
+                    <th style={{ width: "120px" }}>Mã phim</th>
+                    <th>Tên phim</th>
+                    <th style={{ width: "220px" }}>Tổng doanh thu</th>
                   </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+                </thead>
+                <tbody>
+                  {movies.map((movie) => (
+                    <tr key={movie.id}>
+                      <td>{movie.id}</td>
+                      <td>
+                        <button
+                          type="button"
+                          className={styles.movieTitleButton}
+                          onClick={() => handleMovieClick(movie)}
+                        >
+                          {movie.title}
+                        </button>
+                      </td>
+                      <td className={styles.revenueCell}>
+                        {formatCurrency(movie.totalRevenue)}
+                      </td>
+                    </tr>
+                  ))}
+                  {movies.length === 0 && (
+                    <tr>
+                      <td colSpan={3} style={{ textAlign: "center" }}>
+                        Không có dữ liệu phim.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
 
-      {/* Panel chi tiết doanh thu 1 phim */}
-      <div className={styles.detailSection}>
-        <h2 className={styles.sectionTitle}>Chi tiết doanh thu theo suất chiếu</h2>
+        {/* Panel chi tiết doanh thu 1 phim */}
+        <div className={styles.detailSection}>
+          <h2 className={styles.sectionTitle}>Chi tiết doanh thu theo suất chiếu</h2>
 
-        {!selectedMovieId && (
-          <p>Hãy bấm vào tên một bộ phim trong bảng để xem chi tiết.</p>
-        )}
+          {!selectedMovieId && (
+            <p>Hãy bấm vào tên một bộ phim trong bảng để xem chi tiết.</p>
+          )}
 
-        {selectedMovieId && (
-          <>
-            <p className={styles.selectedMovieInfo}>
-              Phim được chọn: <strong>{selectedMovieTitle}</strong> ({selectedMovieId})
-            </p>
+          {selectedMovieId && (
+            <>
+              <p className={styles.selectedMovieInfo}>
+                Phim được chọn: <strong>{selectedMovieTitle}</strong> ({selectedMovieId})
+              </p>
 
-            {isLoadingDetail && <p>Đang tải chi tiết doanh thu...</p>}
-            {detailError && <p className={styles.errorText}>{detailError}</p>}
+              {isLoadingDetail && <p>Đang tải chi tiết doanh thu...</p>}
+              {detailError && <p className={styles.errorText}>{detailError}</p>}
 
-            {!isLoadingDetail && !detailError && detail && (
-              <pre className={styles.detailBox}>{detail}</pre>
-            )}
-          </>
-        )}
+              {!isLoadingDetail && !detailError && detail && (
+                <pre className={styles.detailBox}>{detail}</pre>
+              )}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
