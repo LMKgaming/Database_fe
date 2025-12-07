@@ -24,12 +24,13 @@ export default function HomePage() {
         // TODO: THAY URL NÀY BẰNG API THẬT CỦA BẠN
         // Backend nên trả dạng:
         // [{ id: "MV001", title: "Mai", totalRevenue: 1068000 }, ...]
-        const res = await fetch("/api/movies");
+        const res = await fetch("http://localhost:8080/api/movies");
         if (!res.ok) {
           throw new Error("Không thể tải danh sách phim");
         }
 
-        const data = await res.json();
+        const temp = await res.json();
+        const data = temp.data
         setMovies(data || []);
       } catch (err) {
         setMoviesError(err.message || "Có lỗi xảy ra");
@@ -63,10 +64,7 @@ export default function HomePage() {
     setIsLoadingDetail(true);
 
     try {
-      // TODO: THAY URL NÀY BẰNG API THẬT CỦA BẠN
-      // Gợi ý backend: GET /api/movies/{id}/revenue-detail
-      // trả về JSON: { detail: "Phim: Mai\nSuat 1..." }
-      const res = await fetch(`/api/movies/${movie.id}/revenue-detail`);
+      const res = await fetch(`http://localhost:8080/api/movies/${movie.id}/revenue-detail`);
       if (!res.ok) {
         throw new Error("Không thể tải chi tiết doanh thu");
       }
